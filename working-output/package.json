@@ -1,0 +1,18 @@
+{
+  "name": "dashboard-builder",
+  "type": "module",
+  "version": "0.1.0",
+  "scripts": {
+    "start": "./start",
+    "build": "./build",
+    "preview": "vite preview --host --port 3140",
+    "service": "node service/index.js"
+  },
+  "devDependencies": {
+    "monaco-editor": "^0.52.2",
+    "vite": "^7.0.4",
+    "vite-plugin-monaco-editor": "^1.1.0"
+  },
+  "author": "rusminto https://github.com/rusminto",
+  "license": "MIT"
+}

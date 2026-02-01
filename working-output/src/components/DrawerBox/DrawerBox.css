@@ -1,0 +1,46 @@
+drawer-box {
+	display: block;
+	width: 100%;
+	height: 100vh;
+	overflow-y: scroll;
+}
+
+drawer-box .grid-stack { 
+	background: #EDEFF2;
+	min-height: 100vh;
+}
+
+/*drawer-box .drawer-wrapper {
+	height: calc(100% - var(--tab-height) - (var(--size-field) * 10) - (var(--spacing) * 5) );
+}*/
+
+drawer-box .grid-stack-item-content { 
+	border-radius: 5px; 
+}
+
+drawer-box .grid-stack-nested {
+	width: 100%;
+	background: transparent;
+	height: 100%;
+}
+
+drawer-box #right-click-menu {
+  min-width: 150px;
+}
+
+drawer-box .absolute-wrapper {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0px;
+	left: 0px;
+	z-index: 0;
+}
+
+drawer-box .to-the-front {
+	z-index: 1;
+}
+
+drawer-box .hide-scroll {
+	overflow-y: clip !important;
+}

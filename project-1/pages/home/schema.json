@@ -1,0 +1,44 @@
+{
+	"name": "Home",
+	"components": {
+		"card-sample": {
+			"templateId": "card-a",
+			"attributes": {
+				"BACKGROUND_COLOR": "#FFFFF2"
+			},
+			"gridstack": {
+				"w": 10, 
+				"h": 5,
+				"x": 5,
+				"y": 5
+			}
+		},
+		"btn-ok": {
+			"templateId": "btn-a",
+			"attributes": {
+				"BACKGROUND_COLOR": "#70FF90",
+				"LABEL": "OK"
+			},
+			"gridstack": {
+				"x": 1,
+				"y": 3
+			}
+		},
+		"input-random": {
+			"templateId": "input-a",
+			"attributes": {
+				"PLACEHOLDER": "Type here..."
+			},
+			"gridstack": {
+				"x": 1,
+				"y": 1
+			}
+		}
+	},
+	"arrangements": {
+		"card-sample": [
+			"input-random",
+			"btn-ok"
+		]
+	}
+}

@@ -1,0 +1,36 @@
+#!/usr/bin/env node
+
+import fs from 'fs';
+import path from 'path';
+import { spawn, execSync } from 'node:child_process';
+
+const __dirname = import.meta.dirname;
+const dir = __dirname
+
+const binDir = path.join(dir, `node_modules/.bin`);
+const viteBin = path.join(binDir, 'vite');
+
+execSync('node utils/listingComponent.js', {
+	cwd: `${dir}`,
+	stdio: 'inherit',
+});
+execSync('node utils/listingPageForRoute.js', {
+	cwd: `${dir}`,
+	stdio: 'inherit',
+});
+execSync('node ./utils/listingPluginHeaders.js', {
+	cwd: `${dir}`,
+	stdio: 'inherit',
+});
+//execSync('node ./utils/listingPluginComponent.mjs');
+//execSync('node ./utils/listingPluginHeaders.mjs');
+
+execSync(viteBin + ' build', {
+	cwd: `${dir}`,
+	stdio: 'inherit',
+});
+
+fs.copyFileSync(
+	path.join(dir, '.htaccess'), 
+	path.join(dir, 'dist/.htaccess')
+);

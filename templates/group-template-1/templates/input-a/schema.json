@@ -1,0 +1,13 @@
+{
+	"name": "Simple Input",
+	"attributes": {
+		"PLACEHOLDER": {
+			"type": "string",
+			"default": "Type some string in here..."
+		}
+	},
+	"gridstack": {
+		"w": 10, 
+		"h": 2
+	}
+}

@@ -1,0 +1,15 @@
+{
+  "name": "dashboard-builder",
+  "version": "0.1.0",
+  "scripts": {
+    "start": "./start",
+    "build": "./build",
+    "preview": "vite preview --host --port 3140",
+    "service": "node service/index.js"
+  },
+  "devDependencies": {
+    "vite": "^7.0.4"
+  },
+  "author": "rusminto https://github.com/rusminto",
+  "license": "MIT"
+}

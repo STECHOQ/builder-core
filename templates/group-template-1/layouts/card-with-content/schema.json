@@ -1,0 +1,32 @@
+{
+	"name": "Card with Content",
+	"components": {
+		"card-with-content": {
+			"templateId": "card-a",
+			"attributes": {
+				"BACKGROUND_COLOR": "#DDDDDD"
+			},
+			"gridstack": {
+				"w": 5, 
+				"h": 5,
+				"x": 30,
+				"y": 5
+			}
+		},
+		"label-title": {
+			"templateId": "label-a",
+			"attributes": {
+				"TEXT": "INFO"
+			},
+			"gridstack": {
+				"x": 1,
+				"y": 1
+			}
+		}
+	},
+	"arrangements": {
+		"card-with-content": [
+			"label-title"
+		]
+	}
+}
