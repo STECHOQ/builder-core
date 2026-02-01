@@ -115,6 +115,35 @@ class build {
 		}
 	}
 
+	async handleLibraries({ templates, outputPath }){
+		const self = this;
+
+		const librariesLinks = { css: [], js: [] };
+
+		for(const templateId in templates){
+			const template = templates[templateId];
+
+			const librariesLink = template["schema.json"]?.libraries;
+			if(librariesLink?.css?.length){
+				librariesLinks.css.push(...librariesLink.css);
+			}
+
+			if(librariesLink?.js?.length){
+				librariesLinks.js.push(...librariesLink.js);
+			}
+
+			const librariesFiles = template.libraries;
+
+			// if library is file, then put it into public/vendor
+			if(Object.keys(librariesFiles)?.length){
+				await self.addLibrariesToVendor({files: librariesFiles, outputPath, templateId});
+			}
+		}
+
+		// if library is link, then put it directly into index.html
+		await self.addLibraryLinkToIndexHTML(librariesLinks, outputPath);
+	}
+
 	async start(){
 		const self = this;
 
@@ -122,22 +151,8 @@ class build {
 
 		const templates = await self.loadTemplates(PATH_TEMPLATES);
 		//console.log(JSON.stringify(templates, null, 2));
-
-		for(const templateId in templates){
-			const template = templates[templateId];
-
-			// if library is link, then put it directly into index.html
-			const librariesLink = template["schema.json"]?.libraries;
-			if(librariesLink){
-				self.addLibraryLinkToIndexHTML(librariesLink, outputPath);
-			}
-
-			// if library is file, then put it into public/vendor
-			const librariesFiles = template.libraries;
-			if(Object.keys(librariesFiles)?.length){
-				self.addLibrariesToVendor({files: librariesFiles, outputPath, templateId});
-			}
-		}
+		
+		await self.handleLibraries({ templates, outputPath });
 
 		// generate layout at src/layouts
    			// get list of its components
