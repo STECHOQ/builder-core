@@ -1,0 +1,26 @@
+{
+  "name": "builder-core",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/STECHOQ/builder-core.git"
+  },
+  "author": "rusminto <rusminto900@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/STECHOQ/builder-core/issues"
+  },
+  "homepage": "https://github.com/STECHOQ/builder-core#readme",
+  "description": "",
+  "dependencies": {
+    "postcss": "^8.5.6"
+  }
+}

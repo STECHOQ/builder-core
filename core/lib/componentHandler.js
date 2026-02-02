@@ -1,5 +1,6 @@
 import fs from "fs/promises";
 import path from 'path';
+import postcss from 'postcss';
 
 import stringFormatter from './stringFormatter.js';
 
@@ -51,12 +52,62 @@ class componentHandler {
 						)
 					};
 
+					if(cTemplateFile.match(/\.css$/)){
+
+						replacedContent = await self.addPrefixOnCSS({
+							prefix: componentId,
+							cssInput: replacedContent
+						})
+					}
+
 					const destinationPath = path.join(componentPath, cTemplateFile);
 
 					await fs.writeFile(destinationPath, replacedContent, 'utf8');
 				}
 			}
 		}
+	}
+
+	async addPrefixOnCSS({ prefix, cssInput }){
+		const self = this;
+
+		const prefixPlugin = () => {
+  			return {
+    			postcssPlugin: 'postcss-prefixer',
+    			Once(root) {
+    				// Create the empty "prefix {}" at the top 
+    				const wrapper = postcss.rule({ selector: prefix });
+    				root.prepend(wrapper);
+    			},
+    			Rule(rule) {
+      				// Check if the rule is inside an @keyframes block
+      				if (rule.parent && rule.parent.type === 'atrule' && rule.parent.name === 'keyframes') {
+        				return;
+      				}
+
+      				// Ignore Global At-Rules (@font-face, @import, etc.)
+      				// Note: We ALLOW @media and @supports because we WANT to prefix rules inside them
+      				if (rule.parent?.type === 'atrule' && !['media', 'supports'].includes(rule.parent.name)) {
+        				return;
+      				}
+
+      				// Handle :root, html, and body
+      				// We often want to turn these INTO the prefix itself, or just skip them
+      				rule.selectors = rule.selectors.map(sel => {
+        				if (sel === ':root' || sel === 'html' || sel === 'body') {
+          					return sel; // Keep as is, or return prefix if you want to scope globals
+        				}
+        				if (sel === prefix) return sel;
+
+        				return `${prefix} ${sel}`;
+      				});
+    			},
+  			};
+		};
+
+		const result = await postcss([prefixPlugin()]).process(cssInput, { from: undefined });
+
+		return result.css;
 	}
 
 	async formatToGridstack({ components, arrangements }, cTemplates){
