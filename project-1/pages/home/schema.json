@@ -1,5 +1,8 @@
 {
 	"name": "Home",
+	"layouts": [
+		"card-with-content"
+	],
 	"components": {
 		"card-sample": {
 			"templateId": "card-a",

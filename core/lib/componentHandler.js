@@ -159,7 +159,11 @@ class componentHandler {
 				};
 
 				for(const child of content){
-					const { structures, totalComponents } = await self.formatToGridstack({ components, arrangements: content }, cTemplates);
+
+					const tmpArrangement = {};
+					tmpArrangement[child] = null;
+
+					const { structures, totalComponents } = await self.formatToGridstack({ components, arrangements: tmpArrangement }, cTemplates);
 					childResults.subGridOpts.children.push(...structures);
 					_totalComponents += totalComponents;
 				}

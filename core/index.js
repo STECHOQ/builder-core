@@ -2,6 +2,7 @@ import path from 'path';
 
 import setup from './lib/setup.js';
 import layoutHandler from './lib/layoutHandler.js';
+import pageHandler from './lib/pageHandler.js';
 
 const __basedir = import.meta.dirname;
 
@@ -25,6 +26,7 @@ class build {
 		const outputPath = await setup.createTmpDir(PATH_OUTPUTS, PATH_TEMPLATE_BUILD);
 
 		const templates = await setup.loadTemplates(PATH_TEMPLATES);
+		const project = await setup.loadTemplates(PATH_PROJECT_DATA);
 		//console.log(JSON.stringify(templates, null, 2));
 		
 		await setup.handleLibraries({ templates, outputPath });
@@ -33,27 +35,12 @@ class build {
 			outputPath,
 			templates
 		});
-		
-		// generate component at public/components
-   			// get html & css from component's template
-   			// fill the empty attribut of html
-   			// put filled html & css to component's directory 
-   			// add componenId at the front of each .css syntax
-   			// call css from root index.html 
 
-		// generate page from PageTemplate at src/pages
-   			// copy PageTemplate and rename the name
-   			// replace LIST_COMPONENTS with generated gridstack-formatted component
-   			// add script import at /* import script */ ... /* end of import script */
-   			// add script call at /* call script */ ... /* end of call script */
-   			// replace TOTAL_COMPONENTS with total components
-   			// put js script at same directory as page.js
-   			// add script import of layout
-   			// add script merge layout items & totalComponents
-   			// add script to load layout script
-
-		// replace DEFAULT_PAGE in main.js 
-		// delete PageTemplate 
+		await pageHandler.init({
+			outputPath,
+			templates,
+			project
+		})
 	}
 }
 

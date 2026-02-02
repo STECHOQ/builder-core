@@ -10,6 +10,57 @@ class replaceContent {
 		await self.replaceImportComment({ filepath, newTexts: generated, start, end });
 	}
 
+	async handleScript(pagePath, page, indexjsPath){
+		const self = this;
+
+		if(!page.scripts || typeof page.scripts !== 'object') return {};
+
+		const scriptNames = [];
+		for(const scriptName in page.scripts){
+			const scriptPath = page.scripts[scriptName];
+			const destinationPath = path.join(pagePath, 'scripts', scriptName);
+
+			// put js script at same directory as page.js
+			await fs.promises.cp(scriptPath, destinationPath, { recursive: true, force: true });
+
+			const cleanScriptName = scriptName.replace('.js', '');
+			scriptNames.push(cleanScriptName);
+		}
+
+		// add script import at /* import script */ ... /* end of import script */ 
+		await self.generateAndReplaceImportComment({
+			files: scriptNames,
+			start: '/* import js script */',
+			end: '/* end of import js script */',
+			content: `import {{CONTENT}} from './scripts/{{CONTENT}}.js';`,
+			filepath: indexjsPath,
+		});
+
+		// add script call at /* call script */ ... /* end of call script */ 
+		await self.generateAndReplaceImportComment({
+			files: scriptNames,
+			start: '/* call js script */',
+			end: '/* end of call js script */',
+			content: `await {{CONTENT}}(self);`,
+			filepath: indexjsPath,
+		});
+	}
+
+	async insertComponents({ structures, totalComponents }, indexjsPath){
+		const self = this;
+
+		const srcContent = await fs.promises.readFile(indexjsPath, 'utf8');
+		let replacedContent = srcContent;
+
+		// replace LIST_COMPONENTS with generated gridstack-formatted component 
+		replacedContent = replacedContent.replace(/LIST_COMPONENTS/g, JSON.stringify(structures, null, 4));
+
+		// replace TOTAL_COMPONENTS with total components 
+		replacedContent = replacedContent.replace(/TOTAL_COMPONENTS/g, totalComponents);
+
+		await fs.promises.writeFile(indexjsPath, replacedContent, 'utf8');
+	}
+
 	async replaceImportComment({ filepath, newTexts, start, end }){
 		const self = this;
 

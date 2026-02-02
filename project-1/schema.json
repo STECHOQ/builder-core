@@ -1,8 +1,4 @@
 {
 	"name": "Project A",
-	"mainPageId": "home",
-	"templates": [
-		"group-template-1",
-		"group-template-2"
-	]
+	"mainPageId": "home"
 }
