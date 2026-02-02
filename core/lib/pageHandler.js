@@ -126,7 +126,7 @@ class pageHandler {
 			files: layoutNames,
 			start: '/* add layout attribute */',
 			end: '/* end of add layout attribute */',
-			content: `items.push(...{{CONTENT}}.items); self.totalComponent += {{CONTENT}}.totalComponent;`,
+			content: `items.push(...{{CONTENT}}.items); totalComponent += {{CONTENT}}.totalComponent;`,
 			filepath: mainJsPath,
 		});
 

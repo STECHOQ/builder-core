@@ -1,5 +1,5 @@
 export default async function onLoad(self){
-	const text = document.querySelector('#label-title');
+	const text = self.querySelector('#label-title');
 
 	let counter = 0;
 

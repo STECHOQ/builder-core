@@ -21,8 +21,8 @@ class componentHandler {
 
 		for(const componentId in components){
 			const component = components[componentId];
-			const componentName = stringFormatter.capitalizeFirstLetter(componentId);
-			const componentPath = path.join(outputPath, 'public', 'components', componentName);
+
+			const componentPath = path.join(outputPath, 'public', 'components', componentId);
 
 			await fs.mkdir(componentPath, { recursive: true });
 

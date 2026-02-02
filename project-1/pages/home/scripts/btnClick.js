@@ -1,10 +1,10 @@
 export default async function btnClick(self){
 
-	const btn = document.querySelector('#btn-ok');
+	const btn = self.querySelector('#btn-ok');
 
 	btn.addEventListener('click', () => {
 
-		const input = document.querySelector('#input-random');
+		const input = self.querySelector('#input-random');
 
 		const text = `Text: ${input.value}`;
 
