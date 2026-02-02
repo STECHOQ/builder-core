@@ -1,6 +1,7 @@
 import path from 'path';
 
 import setup from './lib/setup.js';
+import layoutHandler from './lib/layoutHandler.js';
 
 const __basedir = import.meta.dirname;
 
@@ -15,10 +16,10 @@ class build {
 	constructor(){
 		const self = this;
 
-		self.start();
+		self.init();
 	}
 
-	async start(){
+	async init(){
 		const self = this;
 
 		const outputPath = await setup.createTmpDir(PATH_OUTPUTS, PATH_TEMPLATE_BUILD);
@@ -28,16 +29,11 @@ class build {
 		
 		await setup.handleLibraries({ templates, outputPath });
 
-		// generate layout at src/layouts
-   			// get list of its components
-   			// add its components into array of components (below one)
-   			// copy LayoutTemplate and rename the name
-   			// replace LIST_COMPONENTS with generated gridstack-formatted component
-   			// add script import at /* import script */ ... /* end of import script */
-   			// add script call at /* call script */ ... /* end of call script */
-   			// replace TOTAL_COMPONENTS with total components
-   			// put js script at same directory as page.js
-
+		await layoutHandler.init({
+			outputPath,
+			templates
+		});
+		
 		// generate component at public/components
    			// get html & css from component's template
    			// fill the empty attribut of html
@@ -58,7 +54,6 @@ class build {
 
 		// replace DEFAULT_PAGE in main.js 
 		// delete PageTemplate 
-		// delete LayoutTemplate
 	}
 }
 

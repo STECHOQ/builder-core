@@ -35,7 +35,7 @@ class replaceContent {
 
 		let texts = start + '\n';
 		for(let file of files){
-			const formattedContent = content.replace('{{CONTENT}}', file) + '\n';
+			const formattedContent = content.replace(/{{CONTENT}}/g, file) + '\n';
 			texts += formattedContent;
 		}
 		texts += end + '\n';

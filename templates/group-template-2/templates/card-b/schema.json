@@ -1,0 +1,13 @@
+{
+	"name": "Simple Card",
+	"attributes": {
+		"BACKGROUND_COLOR": {
+			"type": "color",
+			"default": "#FFFFFF"
+		}
+	},
+	"gridstack": {
+		"w":10,
+		"h":8
+	}
+}
