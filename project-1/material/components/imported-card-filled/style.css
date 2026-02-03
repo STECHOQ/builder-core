@@ -1,0 +1,30 @@
+.card {
+    height: calc(100% - 5px);
+	width: calc(100% - 5px);
+}
+
+/* css below is just for testing */
+.active {
+    border: 1px solid green;
+}
+
+@keyframes slide-fade {
+    0% {
+        opacity: 0;
+        transform: translateX(-100px);
+    }
+    
+    50% {
+        opacity: 0.7;
+        transform: translateX(50px);
+    }
+    
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+input {
+    background-color: white;
+    animation: slide-fade 3s ease-out infinite alternate;
+}

@@ -1,0 +1,25 @@
+{
+	"name": "Simple Button",
+	"attributes": {
+		"LABEL": {
+			"type": "string",
+			"default": "CLOSE"
+		},
+		"STYLE": {
+			"type": "string",
+			"default": ""
+		},
+		"FRAMEWORK_ATTRIBUTES": {
+			"options": {
+				"bootstrap": "class=\"btn\" type=\"button\"",
+				"daisy": "class=\"btn\""
+			},
+			"type": "select",
+			"default": "daisy"
+		}
+	},
+	"gridstack": {
+		"w": 3, 
+		"h": 2
+	}
+}

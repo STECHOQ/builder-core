@@ -1,0 +1,21 @@
+{
+	"name": "Simple Card",
+	"attributes": {
+		"STYLE": {
+			"type": "string",
+			"default": ""
+		},
+		"FRAMEWORK_ATTRIBUTES": {
+			"options": {
+				"bootstrap": "class=\"card\"",
+				"daisy": "class=\"card shadow-sm\""
+			},
+			"type": "select",
+			"default": "daisy"
+		}
+	},
+	"gridstack": {
+		"w":10,
+		"h":8
+	}
+}

@@ -1,47 +1,51 @@
 {
 	"name": "Home",
-	"layouts": [
-		"card-with-content"
-	],
-	"components": {
-		"card-sample": {
+	"user-components": {
+		"card-login": {
+			"templateId": "card-filled",
+			"attributes": {},
+			"gridstack": {
+				"w": 10, 
+				"h": 5,
+				"x": 20,
+				"y": 5
+			}
+		},
+		"card-register": {
 			"templateId": "card-a",
 			"attributes": {
-				"BACKGROUND_COLOR": "#FFFFF2"
+				"STYLE": "font-size: 16pt"
 			},
 			"gridstack": {
 				"w": 10, 
 				"h": 5,
 				"x": 5,
 				"y": 5
-			}
-		},
-		"btn-ok": {
-			"templateId": "btn-a",
-			"attributes": {
-				"BACKGROUND_COLOR": "#70FF90",
-				"LABEL": "OK"
 			},
-			"gridstack": {
-				"x": 1,
-				"y": 3
-			}
-		},
-		"input-random": {
-			"templateId": "input-a",
-			"attributes": {
-				"PLACEHOLDER": "Type here..."
-			},
-			"gridstack": {
-				"x": 1,
-				"y": 1
+			"children": {
+				"btn-ok": {
+					"templateId": "btn-a",
+					"attributes": {
+						"STYLE": "font-weight: bold; color: white;",
+						"FRAMEWORK_ATTRIBUTES": "bootstrap"
+					},
+					"gridstack": {
+						"x": 1,
+						"y": 3
+					}
+				},
+				"input-random": {
+					"templateId": "input-a",
+					"attributes": {
+						"PLACEHOLDER": "Type here...",
+						"FRAMEWORK_ATTRIBUTES": "daisy"
+					},
+					"gridstack": {
+						"x": 1,
+						"y": 1
+					}
+				}
 			}
 		}
-	},
-	"arrangements": {
-		"card-sample": [
-			"input-random",
-			"btn-ok"
-		]
 	}
 }

@@ -1,0 +1,25 @@
+{
+	"name": "Simple Input",
+	"attributes": {
+		"PLACEHOLDER": {
+			"type": "string",
+			"default": "Type some string in here..."
+		},
+		"STYLE": {
+			"type": "string",
+			"default": ""
+		},
+		"FRAMEWORK_ATTRIBUTES": {
+			"options": {
+				"bootstrap": "class=\"form-control\"",
+				"daisy": "class=\"input\""
+			},
+			"type": "select",
+			"default": "daisy"
+		}
+	},
+	"gridstack": {
+		"w": 10, 
+		"h": 2
+	}
+}
