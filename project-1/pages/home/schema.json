@@ -1,5 +1,6 @@
 {
 	"name": "Home",
+	"framework": "bootstrap",
 	"user-components": {
 		"card-login": {
 			"templateId": "card-filled",

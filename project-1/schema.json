@@ -1,4 +1,5 @@
 {
 	"name": "Project A",
-	"mainPageId": "home"
+	"mainPageId": "home",
+	"framework": "bootstrap"
 }
