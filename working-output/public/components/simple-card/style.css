@@ -1,0 +1,6 @@
+simple-card {}
+
+simple-card .card {
+    height: calc(100% - 5px);
+	width: calc(100% - 5px);
+}
