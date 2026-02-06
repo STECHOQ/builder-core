@@ -19,20 +19,30 @@
 		"h":8
 	},
 	"children": {
-		"input-a": {
+		"input-imported": {
+			"templateId": "input-a",
 			"attributes": {
-				"STYLE": "color: red;",
-				"FRAMEWORK_ATTRIBUTES": "daisy"
+				"STYLE": {
+					"default": "color: red;"
+				},
+				"FRAMEWORK_ATTRIBUTES": {
+					"default": "daisy"
+				}
 			},
 			"gridstack": {
 				"x": 1,
 				"y": 1
 			}
 		},
-		"btn-a": {
+		"btn-imported": {
+			"templateId": "btn-a",
 			"attributes": {
-				"STYLE": "background-color: red; border: 1px solid black",
-				"FRAMEWORK_ATTRIBUTES": "bootstrap"
+				"STYLE": {
+					"default": "background-color: red; border: 1px solid black"
+				},
+				"FRAMEWORK_ATTRIBUTES": {
+					"default": "bootstrap"
+				}
 			},
 			"gridstack": {
 				"x": 1,
