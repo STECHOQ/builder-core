@@ -100,28 +100,47 @@ class setup {
 		}
 	}
 
-	async handleLibraries({ templates, outputPath }){
+	async handleLibraries({ project, outputPath, projectPath }){
 		const self = this;
 
 		const librariesLinks = { css: [], js: [] };
 
-		for(const templateId in templates){
-			const template = templates[templateId];
+		for(const libraryId in project?.material?.libraries){
+			const dirContent = project.material.libraries[libraryId];
+			const schema = dirContent['schema.json'];
 
-			const librariesLink = template["schema.json"]?.libraries;
-			if(librariesLink?.css?.length){
-				librariesLinks.css.push(...librariesLink.css);
+			const librariesFiles = {};
+
+			if(schema?.selectedFiles?.length){
+				for(const filePath of schema.selectedFiles){
+					const splitPath = filePath.split('/');
+					const fileName = splitPath[splitPath.length - 1];
+					const fileActualPath = path.join(projectPath, 'material', 'libraries', libraryId, filePath);
+
+					librariesFiles[fileName] = fileActualPath;
+				}
+			}else{
+				for(const fileId in dirContent){
+					if(fileId != 'schema.json'){
+						librariesFiles[fileId] = dirContent[fileId];
+					}
+				}
 			}
-
-			if(librariesLink?.js?.length){
-				librariesLinks.js.push(...librariesLink.js);
-			}
-
-			const librariesFiles = template.libraries;
 
 			// if library is file, then put it into public/vendor
+
 			if(Object.keys(librariesFiles)?.length){
-				await self.addLibrariesToVendor({files: librariesFiles, outputPath, templateId});
+				await self.addLibrariesToVendor({files: librariesFiles, outputPath, templateId: libraryId});
+			}
+
+			if(schema?.urls){
+				if(schema.urls?.css?.length){
+					librariesLinks.css.push(...schema.urls.css);
+				}
+
+				if(schema.urls?.js.length){
+					librariesLinks.js.push(...schema.urls.js);
+				}
 			}
 		}
 

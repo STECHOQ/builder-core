@@ -1,0 +1,10 @@
+{
+	"urls": {
+    	"css": [
+        	"https://cdn.jsdelivr.net/npm/simple-notify/dist/simple-notify.css"
+    	],
+    	"js": [
+        	"https://cdn.jsdelivr.net/npm/simple-notify/dist/simple-notify.min.js"
+    	]
+    }
+}

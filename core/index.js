@@ -6,9 +6,8 @@ import pageHandler from './lib/pageHandler.js';
 
 const __basedir = import.meta.dirname;
 
-const PATH_TEMPLATE_BUILD = `${__basedir}/../new-template-bundle`;
+const PATH_TEMPLATE_BUILD = `${__basedir}/../empty-bundle`;
 const PATH_PROJECT_DATA = `${__basedir}/../project-1`;
-const PATH_TEMPLATES = `${__basedir}/../templates`;
 const PATH_OUTPUTS = `${__basedir}/../outputs`;
 
 const PATH_ROOT = path.join(__basedir, '..');
@@ -25,13 +24,12 @@ class build {
 
 		const outputPath = await setup.createTmpDir(PATH_OUTPUTS, PATH_TEMPLATE_BUILD);
 
-		const templates = await setup.loadTemplates(PATH_TEMPLATES);
 		const project = await setup.loadTemplates(PATH_PROJECT_DATA);
-		//console.log(JSON.stringify(templates, null, 2));
+		//console.log(JSON.stringify(project.material.libraries, null, 2));
 		
-		await setup.handleLibraries({ templates, outputPath });
+		await setup.handleLibraries({ project: project, outputPath, projectPath: PATH_PROJECT_DATA });
 
-		await layoutHandler.init({
+		/*await layoutHandler.init({
 			outputPath,
 			templates
 		});
@@ -40,7 +38,7 @@ class build {
 			outputPath,
 			templates,
 			project
-		})
+		})*/
 	}
 }
 
