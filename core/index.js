@@ -1,7 +1,6 @@
 import path from 'path';
 
 import setup from './lib/setup.js';
-import layoutHandler from './lib/layoutHandler.js';
 import pageHandler from './lib/pageHandler.js';
 
 const __basedir = import.meta.dirname;
@@ -29,16 +28,10 @@ class build {
 		
 		await setup.handleLibraries({ project: project, outputPath, projectPath: PATH_PROJECT_DATA });
 
-		/*await layoutHandler.init({
-			outputPath,
-			templates
-		});
-
 		await pageHandler.init({
 			outputPath,
-			templates,
 			project
-		})*/
+		})
 	}
 }
 

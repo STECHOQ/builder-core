@@ -10,14 +10,15 @@ class pageHandler {
 	// generate page from PageTemplate at src/pages
 	async init({
 		outputPath,
-		templates,
 		project
 	}){
 		const self = this;
 
 		const pageTemplatePath = path.join(outputPath, 'src', 'pages', 'PageTemplate');
 
-		const cTemplates = await self.prepareComponentTemplates(templates)
+		await componentHandler.prepareComponents(project);
+
+		return;
 
 		for(const pageId in project.pages){
 
@@ -27,11 +28,14 @@ class pageHandler {
 
 			await replaceContent.handleScript(newPagePath, page, mainJsPath);
 
-			await self.handleLayout(newPagePath, page, mainJsPath);
+			const componentStructure = await componentHandler.setAll({
+				componentMaterials: project.material.components,
+				components: {} || {}, 
+				outputPath,
+				framework: page?.framework || project?.framework
+			});
 
-			const componentStructure = await componentHandler.setAll(page["schema.json"], outputPath, cTemplates);
-
-			await replaceContent.insertComponents(componentStructure, mainJsPath);
+			//await replaceContent.insertComponents(componentStructure, mainJsPath);
 
 		}
 
@@ -80,65 +84,6 @@ class pageHandler {
 		await fs.writeFile(mainJsPath, content, "utf8");
 
 		return { mainJsPath, newPagePath };
-	}
-
-	async prepareComponentTemplates(templates){
-		const self = this;
-
-		const results = {};
-
-		for(const templateId in templates){
-			const template = templates[templateId];
-
-			const cTemplates = templates[templateId].templates;
-			Object.assign(results, cTemplates);
-		}
-
-		return results;
-	}
-
-	async handleLayout(newPagePath, page, mainJsPath){
-		const self = this;
-
-		const layouts = page['schema.json']?.layouts || [];
-
-		const layoutNames = [];
-
-		for(const layoutId of layouts){
-
-			const layoutName = 'Layout ' + layoutId;
-			const capitalLayoutName = stringFormatter.capitalizeFirstLetter(layoutName);
-
-			layoutNames.push(capitalLayoutName);
-		}
-
-		// add script import 
-		await replaceContent.generateAndReplaceImportComment({
-			files: layoutNames,
-			start: '/* import layout */',
-			end: '/* end of import layout */',
-			content: `import * as {{CONTENT}} from '../../layouts/{{CONTENT}}';`,
-			filepath: mainJsPath,
-		});
-
-		// add attribute
-		await replaceContent.generateAndReplaceImportComment({
-			files: layoutNames,
-			start: '/* add layout attribute */',
-			end: '/* end of add layout attribute */',
-			content: `items.push(...{{CONTENT}}.items); totalComponent += {{CONTENT}}.totalComponent;`,
-			filepath: mainJsPath,
-		});
-
-		// call layout
-		await replaceContent.generateAndReplaceImportComment({
-			files: layoutNames,
-			start: '/* call layout script */',
-			end: '/* end of call layout script */',
-			content: `await {{CONTENT}}.load(self);`,
-			filepath: mainJsPath,
-		});
-		
 	}
 }
 

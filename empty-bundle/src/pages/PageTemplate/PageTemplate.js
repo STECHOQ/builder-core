@@ -1,9 +1,6 @@
 import router from '../../models/router.js';
 import ui from '../../models/ui.js';
 
-/* import layout */
-/* end of import layout */
-
 /* import js script */
 /* end of import js script */
 
@@ -21,9 +18,6 @@ class PageTemplate extends HTMLElement {
 		const items = 
 			LIST_COMPONENTS
 			|| [];
-
-		/* add layout attribute */
-		/* end of add layout attribute */
 
 		self.drawerBox = document.createElement('drawer-box');
 		self.drawerBox.setData({
@@ -49,9 +43,6 @@ class PageTemplate extends HTMLElement {
 		self.grid = self.drawerBox._grid;
 		self.ui = ui;
 		self.router = router;
-
-		/* call layout script */
-		/* end of call layout script */
 
 		/* call js script */
 		/* end of call js script */

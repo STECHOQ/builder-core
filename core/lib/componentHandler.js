@@ -6,8 +6,14 @@ import stringFormatter from './stringFormatter.js';
 
 class componentHandler {
 
-	async setAll({ components, arrangements }, outputPath, cTemplates){
+	async setAll({components, outputPath, framework}){
 		const self = this;
+
+		// collect all components & flaten it 
+		//const flatComponents = await self.flattenComponents(structuredClone(components));
+
+		console.log(JSON.stringify(components, null, 2))
+		return;
 
 		await self.createComponentsDir(components, cTemplates, outputPath);
 
@@ -178,6 +184,165 @@ class componentHandler {
 			structures: result,
 			totalComponents: _totalComponents,
 		};
+	}
+
+	async prepareComponents(project){
+		const self = this;
+
+		const components = {};
+		
+		// load components inside material
+		for(const componentId in project.material.components){
+			const component = project.material.components[componentId];
+
+			components[componentId] = component["schema.json"];
+			components[componentId].assets = {};
+			
+			for(const attr in component){
+				if(attr == "schema.json") continue;
+
+				components[componentId].assets[attr] = component[attr];
+			}
+		}
+
+		// load component inside page
+		for(const pageId in project.pages){
+			const page = project.pages[pageId];
+
+			Object.assign(components, page["schema.json"]?.components);
+		}
+
+		// flatten list components 
+		const copyComponents = structuredClone(components);
+
+		const flatComponents = await self.flatComponents(copyComponents);
+		const inheritComponents = await self.inheritComponents(flatComponents);
+
+		console.log(JSON.stringify(inheritComponents, null, 2));
+
+		return {
+			raw: copyComponents,
+			inheritComponents
+		}
+	}
+
+	async flatComponents(components){
+		const self = this;
+
+		const flatComponents = {};
+
+		for(const componentId in components){
+			const component = components[componentId];
+
+			const children = component?.children;
+
+			if(children){
+				const childComponents = await self.flatComponents(children);
+				delete component.children;
+
+				Object.assign(flatComponents, childComponents);
+			}
+		}
+
+		Object.assign(flatComponents, components);
+
+		return flatComponents;
+	}
+
+	async inheritComponents(flatComponents){
+		const self = this;
+
+		const inheritComponents = {};
+
+		for(const componentId in flatComponents){
+			const component = await self.findParentAttribute(flatComponents, componentId);
+			inheritComponents[componentId] = component;
+		}
+
+		return structuredClone(inheritComponents);
+
+	}
+
+	async findParentAttribute(components, componentId){
+		const self = this;
+
+		let component = components[componentId]
+		const templateId = component.templateId;
+
+		if(templateId){
+			const parentAttrs = await self.findParentAttribute(components, templateId)
+
+			for(const attr in parentAttrs){
+				const parentValue = parentAttrs[attr];
+
+				if(component[attr] === undefined){
+					component[attr] = parentValue;
+				}
+			}
+
+			const options = {nonEnum:true, symbols:true, descriptors: true, proto:true};
+			component = self.deepAssign(options)(component, parentAttrs);
+		}
+
+		return component;
+	}
+
+	// Source - https://stackoverflow.com/a/48579540
+	// Posted by RaphaMex, modified by community. See post 'Timeline' for change history
+	// Retrieved 2026-02-09, License - CC BY-SA 3.0
+	toType(a) {
+    	return ({}).toString.call(a).match(/([a-z]+)(:?\])/i)[1];
+	}
+
+	isDeepObject(obj) {
+		const self = this;
+
+    	// Choose which types require we look deeper into (object, array, string...)
+    	return "Object" === self.toType(obj);
+	}
+
+	deepAssign(options) {
+		const self = this;
+    	return function deepAssignWithOptions (target, ...sources) {
+        	sources.forEach( (source) => {
+
+            	if (!self.isDeepObject(source) || !self.isDeepObject(target))
+                	return;
+
+            	// Copy source's own properties into target's own properties
+            	function copyProperty(property) {
+                	const descriptor = Object.getOwnPropertyDescriptor(source, property);
+                	//default: omit non-enumerable properties
+                	if (descriptor.enumerable || options.nonEnum) {
+                    	// Copy in-depth first
+                    	if (self.isDeepObject(source[property]) && self.isDeepObject(target[property]))
+                        	descriptor.value = self.deepAssign(options)(target[property], source[property]);
+                    	//default: omit descriptors
+                    	if (options.descriptors)
+                        	Object.defineProperty(target, property, descriptor); // shallow copy descriptor
+                    	else
+                        	target[property] = descriptor.value; // shallow copy value only
+                	}
+            	}
+
+            	// Copy string-keyed properties
+            	Object.getOwnPropertyNames(source).forEach(copyProperty);
+
+            	//default: omit symbol-keyed properties
+            	if (options.symbols)
+                	Object.getOwnPropertySymbols(source).forEach(copyProperty);
+
+            	//default: omit prototype's own properties
+            	if (options.proto)
+                	// Copy souce prototype's own properties into target prototype's own properties
+                	self.deepAssign(Object.assign({},options,{proto:false})) (// Prevent deeper copy of the prototype chain
+                    	Object.getPrototypeOf(target),
+                    	Object.getPrototypeOf(source)
+                	);
+
+        	});
+        	return target;
+    	}
 	}
 }
 
