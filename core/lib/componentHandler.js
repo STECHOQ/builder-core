@@ -22,7 +22,7 @@ class componentHandler {
 		return gridstackStructure;
 	}
 
-	async createComponentsDir(components, cTemplates, outputPath){
+	async createComponentsDir({ components, outputPath }){
 		const self = this;
 
 		for(const componentId in components){
@@ -32,24 +32,20 @@ class componentHandler {
 
 			await fs.mkdir(componentPath, { recursive: true });
 
-			const componentAttributes = Object.assign({'ID': componentId}, component.attributes);
+			const componentAttributes = component.attributes;
 
-			for(const cTemplateId in cTemplates){
+			if(component.assets){
+				for(const assetName in component.assets){
 
-				if(cTemplateId !== component.templateId) continue;
+					const asset = component.assets[assetName];
 
-				for(const cTemplateFile in cTemplates[cTemplateId]){
-
-					if(cTemplateFile == "schema.json") continue;
-
-					const cTemplate = cTemplates[cTemplateId][cTemplateFile];
-
-					const srcContent = await fs.readFile(cTemplate, 'utf8');
+					const srcContent = await fs.readFile(asset, 'utf8');
 
 					let replacedContent = srcContent;
 					for(const attributeId in componentAttributes){
 
 						const attributeValue = componentAttributes[attributeId];
+
 						const attributeKey = new RegExp(`{{${attributeId}}}`, 'g');
 
 						replacedContent = replacedContent.replace(
@@ -58,7 +54,7 @@ class componentHandler {
 						)
 					};
 
-					if(cTemplateFile.match(/\.css$/)){
+					if(assetName.match(/\.css$/)){
 
 						replacedContent = await self.addPrefixOnCSS({
 							prefix: componentId,
@@ -66,7 +62,7 @@ class componentHandler {
 						})
 					}
 
-					const destinationPath = path.join(componentPath, cTemplateFile);
+					const destinationPath = path.join(componentPath, assetName);
 
 					await fs.writeFile(destinationPath, replacedContent, 'utf8');
 				}
@@ -186,18 +182,135 @@ class componentHandler {
 		};
 	}
 
-	async prepareComponents(project){
+	async prepareComponents({ project, outputPath }){
+		const self = this;
+
+		const components = await self.loadComponents(project);
+
+		// flatten list components 
+		const copyComponents = structuredClone(components);
+
+		const flatComponents = await self.flatComponents(copyComponents);
+		const inheritComponents = await self.inheritComponents(flatComponents);
+
+		const pageComponents = await self.getPageComponents(inheritComponents);
+
+		const frameworkComponents = await self.setFrameworkComponents({
+			components: pageComponents,
+			project: project
+		})
+
+		const valueComponents = await self.setComponentValue(pageComponents);
+
+		await self.createComponentsDir({
+			components: valueComponents, 
+			outputPath,
+		});
+
+		return {
+			raw: copyComponents,
+			inheritComponents
+		}
+	}
+
+	async setComponentValue(rawComponents){
+		const self = this;
+
+		const components = structuredClone(rawComponents);
+
+		for(const componentId in components){
+			const component = components[componentId];
+
+			const componentAttributes = {'ID': { value: componentId, type: 'string' }};
+			Object.assign(component.attributes, componentAttributes);
+
+			for(const componentId in components){
+
+				for(const attrId in components[componentId].attributes){
+					const attr = components[componentId].attributes[attrId];
+
+					if(typeof attr !== 'object') continue;
+
+					let value = attr.value ?? attr.default;
+
+					switch(attr.type){
+						case 'string': {
+						}; break;
+
+						case 'select': {
+							const optionValue = attr.options[attr.value];
+							value = optionValue;
+						}; break;
+
+						default: {
+						}; break;
+					}
+
+					components[componentId].attributes[attrId] = value;
+				}
+			}
+		}
+
+		return components
+	}
+
+	async getPageComponents(components){
+		const self = this;
+
+		const result = {};
+
+		for(const componentId in components){
+			const component = components[componentId];
+
+			if(component.pageId){
+				result[componentId] = component;
+			}
+		}
+
+		return result;
+	}
+
+	async setFrameworkComponents({ components, project }){
+		const self = this;
+
+		const projectFramework = project.framework;
+
+		for(const pageId in project.pages){
+			const page = project.pages[pageId];
+			const pageFramework = page.framework;
+
+			for(const componentId in components){
+				const component = components[componentId];
+
+				if(component.pageId == pageId){
+					const value = component.attributes.FRAMEWORK_ATTRIBUTES.value;
+					const defaultValue = component.attributes.FRAMEWORK_ATTRIBUTES.default;
+
+					if(!value){
+						component.attributes.FRAMEWORK_ATTRIBUTES.value = 
+							pageFramework ||
+							projectFramework ||
+							defaultValue;
+					}
+				}
+			}
+		}
+
+		return components;
+	}
+
+	async loadComponents(project){
 		const self = this;
 
 		const components = {};
-		
+
 		// load components inside material
 		for(const componentId in project.material.components){
 			const component = project.material.components[componentId];
 
 			components[componentId] = component["schema.json"];
 			components[componentId].assets = {};
-			
+
 			for(const attr in component){
 				if(attr == "schema.json") continue;
 
@@ -209,24 +322,23 @@ class componentHandler {
 		for(const pageId in project.pages){
 			const page = project.pages[pageId];
 
-			Object.assign(components, page["schema.json"]?.components);
+			const pageComponents = structuredClone(page["schema.json"]?.components || {});
+
+			for(const componentId in pageComponents){
+				const component = pageComponents[componentId];
+
+				Object.assign(component, {
+					pageId
+				});
+			}
+
+			Object.assign(components, pageComponents);
 		}
 
-		// flatten list components 
-		const copyComponents = structuredClone(components);
-
-		const flatComponents = await self.flatComponents(copyComponents);
-		const inheritComponents = await self.inheritComponents(flatComponents);
-
-		console.log(JSON.stringify(inheritComponents, null, 2));
-
-		return {
-			raw: copyComponents,
-			inheritComponents
-		}
+		return components;
 	}
 
-	async flatComponents(components){
+	async flatComponents(components, pageId){
 		const self = this;
 
 		const flatComponents = {};
@@ -236,8 +348,13 @@ class componentHandler {
 
 			const children = component?.children;
 
+			if(pageId){
+				component.pageId = pageId;
+			}
+
 			if(children){
-				const childComponents = await self.flatComponents(children);
+				const parentPageId = component.pageId;
+				const childComponents = await self.flatComponents(children, parentPageId);
 				delete component.children;
 
 				Object.assign(flatComponents, childComponents);

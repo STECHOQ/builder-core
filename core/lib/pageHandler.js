@@ -16,7 +16,10 @@ class pageHandler {
 
 		const pageTemplatePath = path.join(outputPath, 'src', 'pages', 'PageTemplate');
 
-		await componentHandler.prepareComponents(project);
+		await componentHandler.prepareComponents({ 
+			project, 
+			outputPath,
+		});
 
 		return;
 
