@@ -16,29 +16,24 @@ class pageHandler {
 
 		const pageTemplatePath = path.join(outputPath, 'src', 'pages', 'PageTemplate');
 
-		await componentHandler.prepareComponents({ 
+		const { filledComponents } = await componentHandler.prepareComponents({ 
 			project, 
 			outputPath,
 		});
-
-		return;
 
 		for(const pageId in project.pages){
 
 			const page = project.pages[pageId];
 
+			const rawComponents = page['schema.json'].components;
+
+			const componentStructure = await componentHandler.generateGridstackStructure({ rawComponents, filledComponents });
+
 			const { mainJsPath, newPagePath } = await self.preparePageDir(pageId, outputPath, pageTemplatePath);
 
 			await replaceContent.handleScript(newPagePath, page, mainJsPath);
 
-			const componentStructure = await componentHandler.setAll({
-				componentMaterials: project.material.components,
-				components: {} || {}, 
-				outputPath,
-				framework: page?.framework || project?.framework
-			});
-
-			//await replaceContent.insertComponents(componentStructure, mainJsPath);
+			await replaceContent.insertComponents(componentStructure, mainJsPath);
 
 		}
 

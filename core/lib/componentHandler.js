@@ -6,22 +6,6 @@ import stringFormatter from './stringFormatter.js';
 
 class componentHandler {
 
-	async setAll({components, outputPath, framework}){
-		const self = this;
-
-		// collect all components & flaten it 
-		//const flatComponents = await self.flattenComponents(structuredClone(components));
-
-		console.log(JSON.stringify(components, null, 2))
-		return;
-
-		await self.createComponentsDir(components, cTemplates, outputPath);
-
-		const gridstackStructure = await self.formatToGridstack({ components, arrangements }, cTemplates);
-
-		return gridstackStructure;
-	}
-
 	async createComponentsDir({ components, outputPath }){
 		const self = this;
 
@@ -112,45 +96,24 @@ class componentHandler {
 		return result.css;
 	}
 
-	async formatToGridstack({ components, arrangements }, cTemplates){
+	async formatToGridstack({ components, arrangements }){
 		const self = this;
 
 		const result = [];
 
-		let formattedArrangement = {};
-		if(Array.isArray(arrangements)){
-			for(const componentId of arrangements){
-				formattedArrangement[componentId] = null;
-			}
-		}else{
-			formattedArrangement = arrangements;
-		}
-
 		let _totalComponents = 0;
-		for(const componentId in formattedArrangement){
-			const content = formattedArrangement[componentId];
+		for(const componentId in arrangements){
+			const content = arrangements[componentId];
 
 			_totalComponents++;
 
-			let templateGridstack = {};
-			for(const cTemplateId in cTemplates){
-
-				if(cTemplateId == components[componentId].templateId){
-					templateGridstack = cTemplates[cTemplateId]['schema.json'].gridstack;
-					break;
-				}
-			}
-
-			const componentGridstack = Object.assign(
-				structuredClone(templateGridstack),
-				components[componentId].gridstack
-			);
+			const componentGridstack = components[componentId].gridstack;
 
 			const componentDetail = Object.assign({
 				content: componentId
 			}, componentGridstack);
 
-			const hasChildren = Array.isArray(content);
+			const hasChildren = content;
 
 			if(hasChildren){
 
@@ -160,12 +123,12 @@ class componentHandler {
 					}
 				};
 
-				for(const child of content){
+				for(const child in content){
 
 					const tmpArrangement = {};
 					tmpArrangement[child] = null;
 
-					const { structures, totalComponents } = await self.formatToGridstack({ components, arrangements: tmpArrangement }, cTemplates);
+					const { structures, totalComponents } = await self.formatToGridstack({ components, arrangements: tmpArrangement });
 					childResults.subGridOpts.children.push(...structures);
 					_totalComponents += totalComponents;
 				}
@@ -209,7 +172,7 @@ class componentHandler {
 
 		return {
 			raw: copyComponents,
-			inheritComponents
+			filledComponents: valueComponents
 		}
 	}
 
@@ -460,6 +423,37 @@ class componentHandler {
         	});
         	return target;
     	}
+	}
+
+	async generateArrangements(components){
+		const self = this;
+
+		const result = {};
+
+		for(const componentId in components){
+			const component = components[componentId];
+
+			result[componentId] = null;
+
+			if(component.children){
+				result[componentId] = await self.generateArrangements(component.children);
+			}
+		}
+
+		return result;
+	}
+
+	async generateGridstackStructure({ rawComponents, filledComponents }){
+		const self = this;
+
+		const arrangements = await self.generateArrangements(rawComponents);
+
+		const formattedGridstack = await self.formatToGridstack({
+			arrangements,
+			components: filledComponents
+		})
+
+		return formattedGridstack;
 	}
 }
 
