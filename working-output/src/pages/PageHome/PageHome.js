@@ -1,8 +1,6 @@
 import router from '../../models/router.js';
 import ui from '../../models/ui.js';
 
-import * as FilledCard from '../../layouts/FilledCard';
-
 import btnClick from './btnClick.js';
 
 class PageHome extends HTMLElement {
@@ -41,9 +39,6 @@ class PageHome extends HTMLElement {
 				}
   			]
 
-  		items.push(...FilledCard.items);
-  		self.totalComponent += FilledCard.totalComponent;
-
 		self.drawerBox = document.createElement('drawer-box');
 		self.drawerBox.setData({
 			totalComponent: self.totalComponent,
@@ -66,8 +61,6 @@ class PageHome extends HTMLElement {
 		const self = this;
 
 		self.grid = self.drawerBox._grid;
-
-		await FilledCard.load(self);
 
 		await btnClick(self);
 	}
