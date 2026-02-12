@@ -3,7 +3,7 @@
 	"framework": "bootstrap",
 	"components": {
 		"card-login": {
-			"templateId": "imported-card-filled",
+			"baseId": "imported-card-filled",
 			"attributes": {},
 			"gridstack": {
 				"w": 10, 
@@ -11,17 +11,17 @@
 				"x": 20,
 				"y": 5
 			},
-			"children":{
+			"contents":{
 				"input-login": {
-					"templateId": "input-imported"
+					"baseId": "input-imported"
 				},
 				"btn-login": {
-					"templateId": "btn-imported"
+					"baseId": "btn-imported"
 				}
 			}
 		},
 		"card-register": {
-			"templateId": "card-a",
+			"baseId": "card-a",
 			"attributes": {
 				"STYLE": {
 					"value": "font-size: 16pt"
@@ -33,9 +33,9 @@
 				"x": 5,
 				"y": 5
 			},
-			"children": {
+			"contents": {
 				"btn-ok": {
-					"templateId": "btn-a",
+					"baseId": "btn-a",
 					"attributes": {
 						"STYLE": {
 							"value": "font-weight: bold; color: white;"
@@ -50,7 +50,7 @@
 					}
 				},
 				"input-random": {
-					"templateId": "input-a",
+					"baseId": "input-a",
 					"attributes": {
 						"PLACEHOLDER": {
 							"value": "Type here..."

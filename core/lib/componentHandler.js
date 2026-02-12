@@ -113,9 +113,9 @@ class componentHandler {
 				content: componentId
 			}, componentGridstack);
 
-			const hasChildren = content;
+			const hasContents = content;
 
-			if(hasChildren){
+			if(hasContents){
 
 				const childResults = {
 					subGridOpts: {
@@ -309,16 +309,16 @@ class componentHandler {
 		for(const componentId in components){
 			const component = components[componentId];
 
-			const children = component?.children;
+			const contents = component?.contents;
 
 			if(pageId){
 				component.pageId = pageId;
 			}
 
-			if(children){
+			if(contents){
 				const parentPageId = component.pageId;
-				const childComponents = await self.flatComponents(children, parentPageId);
-				delete component.children;
+				const childComponents = await self.flatComponents(contents, parentPageId);
+				delete component.contents;
 
 				Object.assign(flatComponents, childComponents);
 			}
@@ -347,10 +347,10 @@ class componentHandler {
 		const self = this;
 
 		let component = components[componentId]
-		const templateId = component.templateId;
+		const baseId = component.baseId;
 
-		if(templateId){
-			const parentAttrs = await self.findParentAttribute(components, templateId)
+		if(baseId){
+			const parentAttrs = await self.findParentAttribute(components, baseId)
 
 			for(const attr in parentAttrs){
 				const parentValue = parentAttrs[attr];
@@ -435,8 +435,8 @@ class componentHandler {
 
 			result[componentId] = null;
 
-			if(component.children){
-				result[componentId] = await self.generateArrangements(component.children);
+			if(component.contents){
+				result[componentId] = await self.generateArrangements(component.contents);
 			}
 		}
 

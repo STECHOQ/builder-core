@@ -85,10 +85,10 @@ class setup {
 		}
 	}
 
-	async addLibrariesToVendor({files, outputPath, templateId}){
+	async addLibrariesToVendor({files, outputPath, baseId}){
 		const self = this;
 
-		const templatePath = path.join(outputPath, 'public', 'vendor', templateId);
+		const templatePath = path.join(outputPath, 'public', 'vendor', baseId);
 
 		await fs.mkdir(templatePath, { recursive: true });
 
@@ -130,7 +130,7 @@ class setup {
 			// if library is file, then put it into public/vendor
 
 			if(Object.keys(librariesFiles)?.length){
-				await self.addLibrariesToVendor({files: librariesFiles, outputPath, templateId: libraryId});
+				await self.addLibrariesToVendor({files: librariesFiles, outputPath, baseId: libraryId});
 			}
 
 			if(schema?.urls){

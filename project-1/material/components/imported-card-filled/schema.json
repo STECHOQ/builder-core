@@ -18,9 +18,9 @@
 		"w":10,
 		"h":8
 	},
-	"children": {
+	"contents": {
 		"input-imported": {
-			"templateId": "input-a",
+			"baseId": "input-a",
 			"attributes": {
 				"STYLE": {
 					"default": "color: red;"
@@ -35,7 +35,7 @@
 			}
 		},
 		"btn-imported": {
-			"templateId": "btn-a",
+			"baseId": "btn-a",
 			"attributes": {
 				"STYLE": {
 					"default": "background-color: red; border: 1px solid black"
