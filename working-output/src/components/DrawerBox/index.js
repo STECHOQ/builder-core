@@ -1,6 +1,6 @@
 import ui from '../../models/ui.js';
 
-class ELEMENT extends HTMLElement {
+export default class extends HTMLElement {
     constructor(){
         super();
 	}
@@ -31,9 +31,9 @@ class ELEMENT extends HTMLElement {
         self._selectedItem;
 
 		self.append(self.createWrapper());
-		
+
 		self._counterId = 0;
-		window.onload = () => {
+		setTimeout(() => {
 			GridStack.renderCB = async (el, w) => {
 
 				const component = document.createElement(w.content);
@@ -46,8 +46,6 @@ class ELEMENT extends HTMLElement {
 				}
 
 				el.append(component);
-
-				const response = await component.loadComponent();
 
 				// if all loaded, then execute js on the file
 				if(self._counterId + 1 >= self._totalComponent){
@@ -73,8 +71,7 @@ class ELEMENT extends HTMLElement {
 			
 			self._grid.setStatic(true)
 			self._grid.load(self._items);
-		}
-
+		}, 0);
 
 		self._listeners = {}
 
@@ -91,7 +88,3 @@ class ELEMENT extends HTMLElement {
 		}
     }
 }
-
-export default window.customElements.define(
-    'drawer-box', ELEMENT
-)

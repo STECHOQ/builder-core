@@ -1,47 +1,18 @@
 import ui from '../../models/ui.js';
 import router from '../../models/router.js';
+
+import BaseComponent from '../base-component/index.js';
+
 import html from './index.html?raw';
 
-class ELEMENT extends HTMLElement {
+export default class extends BaseComponent {
     constructor(){
         super();
 	}
 
-	createWrapper(){
+	onInit(){
 		const self = this;
 
-		return;
+		self.loadHTML(html);
 	}
-
-	async loadComponent(){
-		const self = this;
-
-		if(html){
-			self.innerHTML = html;
-		}
-
-		return true;
-	}
-
-    connectedCallback(){
-        const self = this;
-
-		self._listeners = {}
-
-		for(let key in self._listeners){
-			ui.addEventListener(key, self._listeners[key]);
-		}
-    }
-
-    disconnectedCallback(){
-        const self = this;
-
-		for(let key in self._listeners){
-			ui.removeEventListener(key, self._listeners[key]);
-		}
-    }
 }
-
- window.customElements.define(
-    'simple-card', ELEMENT
-)

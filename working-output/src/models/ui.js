@@ -73,6 +73,17 @@ class ui extends EventTarget {
 
 		return message;
 	}
+
+	async registerElement({
+		type,
+		name,
+		id
+	}){
+		// only support one-depth only
+		const module = await import(`./../${type}/${name}/index.js`);
+
+		window.customElements.define(id, module.default);
+	}
 }
 
 export default new ui()
