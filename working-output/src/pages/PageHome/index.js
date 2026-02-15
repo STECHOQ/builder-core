@@ -1,7 +1,11 @@
 import router from '../../models/router.js';
 import ui from '../../models/ui.js';
 
-import btnClick from './btnClick.js';
+//import btnClick from './btnClick.js';
+
+import '../../components/DrawerBox/index.js';
+import '../../components/btn-ok/index.js';
+import '../../components/simple-card/index.js';
 
 class PageHome extends HTMLElement {
 	constructor(){
@@ -62,7 +66,7 @@ class PageHome extends HTMLElement {
 
 		self.grid = self.drawerBox._grid;
 
-		await btnClick(self);
+		//await btnClick(self);
 	}
 
 	connectedCallback(){

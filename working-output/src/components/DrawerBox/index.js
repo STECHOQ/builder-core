@@ -47,15 +47,11 @@ class ELEMENT extends HTMLElement {
 
 				el.append(component);
 
-				const response = await fetch(`/components/${w.content}/index.html`)
-				if(response.ok){
-					const html = await response.text();
-					component.innerHTML = html
+				const response = await component.loadComponent();
 
-					// if all loaded, then execute js on the file
-					if(self._counterId + 1 >= self._totalComponent){
-						ui.emit('all-loaded')
-					}
+				// if all loaded, then execute js on the file
+				if(self._counterId + 1 >= self._totalComponent){
+					ui.emit('all-loaded')
 				}
 
 				el.id = `widget-${self._counterId}`;
@@ -91,7 +87,7 @@ class ELEMENT extends HTMLElement {
         const self = this;
 
 		for(let key in self._listeners){
-			ui.removeeventlistener(key, self._listeners[key]);
+			ui.removeEventListener(key, self._listeners[key]);
 		}
     }
 }

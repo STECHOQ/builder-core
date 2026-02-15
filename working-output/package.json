@@ -5,6 +5,7 @@
   "scripts": {
     "start": "./start",
     "build": "./build",
+    "dev": "vite",
     "preview": "vite preview --host --port 3140",
     "service": "node service/index.js"
   },

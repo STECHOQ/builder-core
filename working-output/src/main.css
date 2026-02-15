@@ -1,7 +1,7 @@
 /* PLEASE DON'T CHANGE EVERYTHING BETWEEN '\/* ... *\/' blabla '\/* end of ... *\/' */
 
 /* css components */
-@import url('./components/DrawerBox/DrawerBox.css');
+@import url('./pages/PageHome/style.css');
 /* end of css components */
 
 /* css components plugin */

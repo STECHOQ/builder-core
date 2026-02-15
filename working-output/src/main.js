@@ -1,9 +1,7 @@
 // PLEASE DON'T CHANGE EVERYTHING BETWEEN '/* ... */' blabla '/* end of ... */'
 
 /* js components */
-import './components/DrawerBox/DrawerBox.js';
-import './pages/PageHome/PageHome.js';
-import './pages/PageHome/btnClick.js';
+import './pages/PageHome/index.js';
 /* end of js components */
 
 /* js components plugin */
