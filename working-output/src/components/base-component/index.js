@@ -1,9 +1,15 @@
+import ui from '../../models/ui.js';
+import router from '../../models/router.js';
+
 export default class extends HTMLElement {
     constructor() { 
     	super(); 
     }
 
     listeners = {}
+
+    ui = ui;
+    router = router;
 
 	async loadHTML(html){
 		const self = this;
@@ -19,7 +25,7 @@ export default class extends HTMLElement {
         if (self.onInit) self.onInit(); 
 
 		for(let key in self.listeners){
-			ui.addEventListener(key, self.listeners[key]);
+			self.ui.addEventListener(key, self.listeners[key]);
 		}
     }
 
@@ -29,7 +35,7 @@ export default class extends HTMLElement {
         if (self.onDestroy) self.onDestroy();
 
 		for(let key in self.listeners){
-			ui.removeEventListener(key, self.listeners[key]);
+			self.ui.removeEventListener(key, self.listeners[key]);
 		}
     }
 }

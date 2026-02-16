@@ -1,15 +1,21 @@
 import BaseComponent from '../base-component/index.js';
 
-import html from './index.html?raw';
-
 export default class extends BaseComponent {
     constructor(){
         super();
 	}
 
+	listeners = {
+		'click-ok': ({ detail }) => {
+			new Notify ({
+    			status: 'success',
+    			title: 'OK',
+    			text: `${JSON.stringify(detail)}`,
+			})
+		}
+	}
+
 	onInit(){
 		const self = this;
-
-		self.loadHTML(html);
 	}
 }

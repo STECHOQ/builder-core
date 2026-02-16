@@ -1,6 +1,3 @@
-import router from '../../models/router.js';
-import ui from '../../models/ui.js';
-
 import BasePage from '../base-page/index.js';
 
 export default class extends BasePage {
@@ -30,14 +27,23 @@ export default class extends BasePage {
   						},
 					]
 				}
+			},
+			{
+				"content": "logic-notif",
+				"locked": "yes",
+				"w": 1,
+				"h": 1
 			}
   		];
 
 	async registerElement(){
+		const self = this;
 
-		await ui.registerElement({ type: 'components', name: 'btn-ok', id: 'btn-ok' });
-		await ui.registerElement({ type: 'components', name: 'simple-card', id: 'simple-card' });
-		await ui.registerElement({ type: 'components', name: 'DrawerBox', id: 'drawer-box' });
+		await self.ui.registerElement({ type: 'components', name: 'btn-ok', id: 'btn-ok' });
+		await self.ui.registerElement({ type: 'components', name: 'simple-card', id: 'simple-card' });
+		await self.ui.registerElement({ type: 'components', name: 'logic-notif', id: 'logic-notif' });
+
+		await self.ui.registerElement({ type: 'components', name: 'DrawerBox', id: 'drawer-box' });
 	}
 
 	async onInit(){

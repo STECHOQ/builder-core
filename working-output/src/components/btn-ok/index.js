@@ -1,6 +1,3 @@
-import ui from '../../models/ui.js';
-import router from '../../models/router.js';
-
 import BaseComponent from '../base-component/index.js';
 
 import html from './index.html?raw';
@@ -14,5 +11,13 @@ export default class extends BaseComponent {
 		const self = this;
 
 		self.loadHTML(html);
+
+		self.counter = 0;
+
+		self.addEventListener('click', () => {
+			self.ui.emit('click-ok', {
+				counter: self.counter++
+			})
+		})
 	}
 }
