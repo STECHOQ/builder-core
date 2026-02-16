@@ -79,6 +79,9 @@ class ui extends EventTarget {
 		name,
 		id
 	}){
+		// handle duplicate customElements
+		if(window.customElements.get(id)) return;
+
 		// only support one-depth only
 		const module = await import(`./../${type}/${name}/index.js`);
 

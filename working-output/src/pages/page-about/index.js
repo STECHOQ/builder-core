@@ -18,7 +18,7 @@ export default class extends BasePage {
 				"subGridOpts":{
 					"children":[
   						{
-    						"content": "btn-ok",
+    						"content": "btn-to-home",
     						"w": 5,
     						"h": 5,
     						"locked": "yes",
@@ -27,21 +27,14 @@ export default class extends BasePage {
   						},
 					]
 				}
-			},
-			{
-				"content": "logic-notif",
-				"locked": "yes",
-				"w": 1,
-				"h": 1
 			}
   		];
 
 	async registerElement(){
 		const self = this;
 
-		await self.ui.registerElement({ type: 'components', name: 'btn-ok', id: 'btn-ok' });
+		await self.ui.registerElement({ type: 'components', name: 'btn-to-home', id: 'btn-to-home' });
 		await self.ui.registerElement({ type: 'components', name: 'simple-card', id: 'simple-card' });
-		await self.ui.registerElement({ type: 'components', name: 'logic-notif', id: 'logic-notif' });
 
 		await self.ui.registerElement({ type: 'components', name: 'DrawerBox', id: 'drawer-box' });
 	}

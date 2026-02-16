@@ -19,6 +19,7 @@ const routes = {
 
 	/* generated routes */
 	'/home': { component: 'page-home' },
+	'/about': { component: 'page-about' },
 	/* end of generated routes */
 }
 
@@ -30,8 +31,12 @@ const pathChange = (value) => {
 		router.go(routes[value.to]?.redirect);
 		return;
 	}
-}
 
-ui.registerElement({ type: 'pages', name: 'PageHome', id: 'page-home' });
+	const selectedPageId = routes[value.to]?.component;
+
+	if(selectedPageId){
+		ui.registerElement({ type: 'pages', name: selectedPageId, id: selectedPageId });
+	}
+}
 
 router.init(main, routes, pathChange);
